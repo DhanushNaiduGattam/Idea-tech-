@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  api:
+    build: ./api
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_SVC=http://ml:8001/predict
+  ml:
+    build: ./ml
+    ports:
+      - "8001:8001"
+  iot-gateway:
+    build: ./iot-gateway
+    command: python gateway.py
+    depends_on:
+      - api
+  mosquitto:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
